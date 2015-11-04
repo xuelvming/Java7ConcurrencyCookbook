@@ -1,0 +1,48 @@
+apply plugin: 'java'
+apply plugin: 'application'
+
+version = '1.0.2'
+
+mainClassName = project.property("mainJavaFullPath")
+println(mainClassName)
+
+applicationDefaultJvmArgs = ["-Dgreeting.language=en"]
+
+task createDocs {
+    def docs = file("$buildDir/docs")
+    outputs.dir docs
+    doLast {
+        docs.mkdirs()
+        new File(docs, "readme.txt").write("Read me!")
+    }
+}
+
+distributions {
+    main {
+        contents {
+            from(createDocs) {
+                into "docs"
+            }
+        }
+    }
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compile 'commons-collections:commons-collections:3.2.1'
+}
+
+
+sourceSets {
+    main {
+        java {
+            srcDir 'src'
+        }
+        resources {
+            srcDir 'src'
+        }
+    }
+}
